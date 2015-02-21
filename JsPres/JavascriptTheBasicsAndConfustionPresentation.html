@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Intro to JS</title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+        if (window.location.search.match(/print-pdf/gi)) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = 'css/print/pdf.css';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+    </script>
+
+    <!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+</head>
+
+<body>
+
+    <div class="reveal">
+
+        <!-- Any section element inside of this container is displayed as a slide -->
+        <div class="slides">
+            <section>
+                <h1>Javascript</h1>
+                <h3>The Basics and Confusion</h3>
+                <p>
+                    <small>Created by Matt Seigel</small>
+                </p>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Closures</h2>
+                    <ul>
+                        <li>Creates scope for your code. 'private' variables.</li>
+                        <li>Prevents polluting global/parent's scope</li>
+                        <li>Not the same thing as Google Closure</li>
+                        <li>Self invoking function are often used in combination with these.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Example Code</h2>
+                    <p>
+                        We want a counter that doesn't expose its internal counting variable but exposes an add function. No one else should be able to change the count. In this example everyone can access add, but they can also change the counter variable:
+                    </p>
+                    <pre>
+                        <code data-trim>
+var counter = 0;
+
+function add() {
+    counter += 1;
+}
+
+add();
+add();
+add();
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Example Code</h2>
+                    <p>
+                        You might try something like this:
+                    </p>
+                    <pre>
+                        <code data-trim>
+function add() {
+    var counter = 0;
+    function plus() {counter += 1;}
+    plus();    
+    return counter; 
+}
+                        </code>
+                    </pre>
+                    <p>But you aren't able to access the plus function!</p>
+                </section>
+
+
+
+
+                <section>
+                    <h2>Closure Code</h2>
+                    <p>
+                        Using a self invoking, nested function we can provide the requested behavior. We expose a function called add, but don't expose its internal state variables. We also don't muddy up the global namespace. The () is invoking the add. If you want to pass something into a closed function when self-invoking you can do it here by just putting it in the parathensis.
+                    </p>
+                    <pre>
+                        <code data-trim>
+var add = (function () {
+    var counter = 0;
+    return function () {return counter += 1;}
+})();
+
+add();
+add();
+add();
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Example Code</h2>
+                    <p>
+                        Another great combination of closure and self invoking function allows you store something that you wouldn't usually have easy access too.
+                    </p>
+                    <pre>
+                        <code data-trim>
+for (var i=1; i<=5; i++) {
+    function clickHandler(num) {    
+        $("#div" + i).click (
+            function() { alert (num) }
+        )
+    }
+    clickHandler(i);
+}
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Closure Code</h2>
+                    <p>
+                        A functions variable values are set when the function is called! Now the click event is expecting a function as a handler so return it.
+                    </p>
+                    <pre>
+                        <code data-trim>
+for (var i=1; i<=5; i++) {
+    $("#div" + i).click (
+        function(num) {
+            return function() { alert (num) }
+        }(i) // We call the function here, passing in i
+    )
+}
+                        </code>
+                    </pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>"Truthy & Falsey"</h2>
+                    <p>
+                        JavaScripty people like to use these words to describe how things are evaluated to true and false. Booleans don't work the same way in JavaScript as they do in C# or many other languages, but most of it is the same.
+                    </p>
+                </section>
+                <section>
+                    <h2>Falsey</h2>
+                    <uL>
+                        <li>0</li>
+                        <li>undefined</li>
+                        <li>null</li>
+                        <li>NaN</li>
+                        <li>""</li>
+                        <li>false</li>
+                    </uL>
+                </section>
+                <section>
+                    <h2>Truthy</h2>
+                    <ul>
+                        <li>1</li>
+                        <li>ANY kind of object</li>
+                        <li>new Number(0) is true</li>
+                        <li>new Boolean(false) is true</li>
+                        <li>Basically, everything not falsey</li>
+                    </ul>
+                </section>
+                <section>
+                    <p>false, 0 and "" are equivalent</p>
+                    <ul>
+                        <li>false == 0 is true</li>
+                        <li>false == "" is true</li>
+                        <li>0 == "" is true</li>
+                    </ul>
+                </section>
+                <section>
+                    <p>null and undefined are not equivalent to anything except themselves</p>
+                    <ul>
+                        <li>null == false is false</li>
+                        <li>null == null is true</li>
+                        <li>undefined == undefined is true</li>
+                        <li>undefined == null is true</li>
+                    </ul>
+                </section>
+                <section>
+                    <p>NaN isn't equivalent to anything</p>
+                    <ul>
+                        <li>NaN == null is false</li>
+                        <li>NaN == NaN is false</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>JavaScript classes</h2>
+                    <p>
+                        Three 'class' structures.
+                        <ul>
+                            <li>Using a function</li>
+                            <li>Object literals</li>
+                            <li>Singleton via function</li>
+                        </ul>
+                    </p>
+                </section>
+                <section>
+                    <h2>Function Definition</h2>
+                    <ul>
+                        <li>Define as function</li>
+                        <li>Create using new keyword</li>
+                        <li>Use this. to specify class methods and properties</li>
+                    </ul>
+                    <pre>
+                        <code data-trim>
+function Person (firstName, lastName, sex) {
+    this.firstName = firstName;
+	this.lastName = lastName;
+    this.sex = "male";
+}
+Person.prototype.getFullName = function getFullName() {
+	return this.firstName + ' ' + this.lastName;
+};
+
+var luke = new Person('Luke', 'Skywalker');
+alert(luke.getFullName());
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Object Literals</h2>
+                    <ul>
+                        <li>Faster to write</li>
+                        <li>No constructor, creates instance immediately</li>
+                        <li>Similar to a Singleton</li>
+                        <li>JSON!</li>
+                    </ul>
+                    <pre>
+                        <code data-trim>
+var luke = {
+    firstName: "Luke",
+    lastName: "Skywalker",
+	sex: "male",
+    getFullName: function () {
+        return this.firstName + ' ' + this.lastName;
+    }
+}
+
+alert(luke.getFullName());
+						</code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Singleton via function</h2>
+                    <ul>
+                        <li>Combination of the previous</li>
+                        <li>Use this. to define methods and properties</li>
+                    </ul>
+                    <pre>
+                        <code data-trim>
+var luke = new function() {
+    this.firstName = "Luke";
+    this.lastName = "Skywalker";
+    this.getFullName = function () {
+        rreturn this.firstName + ' ' + this.lastName;
+    };
+}
+
+alert(luke.getFullName());
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Libraries</h2>
+                    <ul>
+                        <li>Often have their own style</li>
+                        <li>Libraries should build on each other under one namespace</li>
+                        <li>Varying opinions on the best method</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>this Confusion</h2>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>Context</td>
+                                <td>Syntax</td>
+                                <td>Value of this</td>
+                            </tr>
+                            <tr>
+                                <td>Function</td>
+                                <td>Baseless function call: func();</td>
+                                <td>window / global</td>
+                            </tr>
+                            <tr>
+                                <td>Function</td>
+                                <td>Method call: object.func();</td>
+                                <td>object</td>
+                            </tr>
+                            <tr>
+                                <td>Function</td>
+                                <td>Constructor: var newObj = new Obj</td>
+                                <td>newObj</td>
+                            </tr>
+                            <tr>
+                                <td>jQuery Event</td>
+                                <td>physical click, $el.trigger('click'), etc</td>
+                                <td>element that spawned the event</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+                <section>
+                    <h2>Example</h2>
+                    <pre>
+                        <code data-trim>
+var class = {
+    myMethod: function () {
+        alert('test');
+    }
+};
+
+class.myMethod(); // object
+
+var myFunc = class.myMethod;
+myFunc(); // window / global
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>
+                    <a href="http://stackoverflow.com/questions/3127429/javascript-this-keyword" target="_blank">Examples</a>
+                    </h2>
+                </section>
+                <section>
+                    <h2>Manipulating the context</h2>
+                    <p>
+                        Default context can be manipulated using functions like call, apply, and bind.
+                    </p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Visual Event 2</h2>
+                    <div>
+                        <a href="VisualEventExample.html" target="_blank">Example</a>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <h2>Questions?</h2>
+            </section>
+
+            <section>
+                <h2>Sources</h2>
+                <ul>
+                    <li>http://howtonode.org/why-use-closure</li>
+                    <li>http://www.w3schools.com/</li>
+                    <li>http://stackoverflow.com/</li>
+                    <li>http://james.padolsey.com/javascript/truthy-falsey/</li>
+                    <li>http://www.sitepoint.com/javascript-truthy-falsy</li>
+                    <li>http://www.quirksmode.org/js/this.html</li>
+                    <li>http://www.digital-web.com/articles/scope_in_javascript/</li>
+                    <li>http://stackoverflow.com/questions/3127429/javascript-this-keyword</li>
+                    <li>http://javascriptissexy.com/understand-javascripts-this-with-clarity-and-master-it/</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Sources</h2>
+                <ul>
+                    <li>http://sprymedia.co.uk/article/Visual+Event+2</li>
+                    <li>http://stackoverflow.com/questions/3127429/javascript-this-keyword</li>
+                </ul>
+            </section>
+        </div>
+
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+        // Full list of configuration options available here:
+         // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+            transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Parallax scrolling
+            parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+            // parallaxBackgroundSize: '2100px 900px',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                {
+                    src: 'lib/js/classList.js',
+                    condition: function () {
+                        return !document.body.classList;
+                    }
+                },
+                {
+                    src: 'lib/markdown/marked.js',
+                    condition: function () {
+                        return !!document.querySelector('[data-markdown]');
+                    }
+                },
+                {
+                    src: 'lib/markdown/markdown.js',
+                    condition: function () {
+                        return !!document.querySelector('[data-markdown]');
+                    }
+                },
+                {
+                    src: 'lib/highlight/highlight.js',
+                    async: true,
+                    callback: function () {
+                        hljs.initHighlightingOnLoad();
+                    }
+                },
+                {
+                    src: 'lib/zoom-js/zoom.js',
+                    async: true,
+                    condition: function () {
+                        return !!document.body.classList;
+                    }
+                },
+                {
+                    src: 'lib/notes/notes.js',
+                    async: true,
+                    condition: function () {
+                        return !!document.body.classList;
+                    }
+                }
+            ]
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>Visual Event Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#on-click-submit').click(function (event) {
+                alert(this.id);
+                return false;
+            });
+            
+            $('#delegated-click-handler').on('click', 'input', function () {
+                alert(this.id);
+                event.stopPropagation();
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+
+<body>
+   <div style="margin:10%">
+       This is a test
+       <form action="POST">
+          <div style="padding: 1em 0">
+              <input id="on-click-submit" class="btn" type="submit" value="On Click Submit">
+          </div>
+           <div id="delegated-click-handler">
+               <input id="submit1" class="btn" type="submit" value="Submit 1">
+               <input id="submit2" class="btn" type="submit" value="Submit 2">
+               <input id="submit3" class="btn" type="submit" value="Submit 3">
+           </div>
+       </form>
+   </div>
+</body>
+
+</html>
