@@ -9,7 +9,7 @@ body .container {
     max-width: 75%;
 }
 .headline {
-    font-family: 'Bevan', cursive;
+    font-family: 'Montserrat', sans-serif;
     font-size: 40pt;
 }
 .backdrop {
@@ -19,5 +19,5 @@ body .container {
     padding: 1em;
 }
 .container ul {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
