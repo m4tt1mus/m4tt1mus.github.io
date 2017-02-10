@@ -2,7 +2,72 @@
 <header>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <link rel="stylesheet" type="text/css" href="content/main.css">
-    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        function createMailTo() {
+            var toAddress = getInput("toAddress", true);
+            var ccAddress = getExtraInput("ccAddress", true);
+            var bccAddress = getExtraInput("bccAddress", true);
+            var theSubject = getExtraInput("theSubject", true);
+            var theBody = getExtraInput("theBody", false);
+
+            var extras = "";
+            extras = appendExtra(ccAddress, "cc", extras);
+            extras = appendExtra(bccAddress, "bcc", extras);
+            extras = appendExtra(theSubject, "subject", extras);
+            extras = appendExtra(theBody, "body", extras);
+
+            if (!isEmpty(toAddress)) {
+                link = "mailto:" + toAddress;
+                if (!isEmpty(extras)) {
+                    link = link + extras;
+                }
+            }
+
+            $('#mailtoLink').text(link);
+        }
+
+        function getInput(name, trim) {
+            var val = $("[name=" + name + "]").val();
+            if (trim) {
+                val = $.trim(val);
+            }
+            return val;
+        }
+
+        function getExtraInput(name) {
+            var val = encodeURIComponent(getInput(name));
+            return val;
+        }
+
+        function isEmpty(text) {
+            if (text.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function appendExtra(extraText, uriLabel, extras) {
+            if (!isEmpty(extraText)) {
+                extras = extras +
+                    pickConcat(extras) +
+                    uriLabel +
+                    "=" +
+                    extraText;
+            }
+            return extras;
+        }
+
+        function pickConcat(extras) {
+            if (isEmpty(extras)) {
+                return "?";
+            } else {
+                return "&";
+            }
+        }
+    </script>
 </header>
 
 <body>
@@ -14,7 +79,7 @@
             <div class="row">
                 ex: mailto:DeltaVMobile.Feedback@Emerson.com?cc=cc&bcc=bcc&subject=DeltaV Mobile Feedback&body=body
             </div>
-            <form name="mailForm">
+            <form name="mailtoForm">
                 <div class="row">
                     <div class="six columns">
                         <label for="toAddress">To:</label>
@@ -40,9 +105,12 @@
                     <textarea class="u-full-width" name="theBody"></textarea>
                 </div>
                 <div class="row">
-                    <input type="button" value="Create" name="button" class="button-primary">
+                    <input type="button" value="Create" name="button" onclick="createMailTo()" class="button-primary">
                 </div>
             </form>
+            <div class="row">
+                <span id="mailtoLink"></span>
+            </div>
         </div>
     </div>
     </div>
