@@ -1,0 +1,51 @@
+<html>
+<header>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <link rel="stylesheet" type="text/css" href="content/main.css">
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+</header>
+
+<body>
+    <div class="container">
+        <div class="backdrop">
+            <div class="row">
+                <h3>Mailto Maker</h3>
+            </div>
+            <div class="row">
+                ex: mailto:DeltaVMobile.Feedback@Emerson.com?cc=cc&bcc=bcc&subject=DeltaV Mobile Feedback&body=body
+            </div>
+            <form name="mailForm">
+                <div class="row">
+                    <div class="six columns">
+                        <label for="toAddress">To:</label>
+                        <input class="u-full-width" name="toAddress">
+                    </div>
+                    <div class="six columns">
+                        <label for="ccAddress">Cc:</label>
+                        <input class="u-full-width" name="ccAddress">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="bccAddress">Bcc:</label>
+                        <input class="u-full-width" name="bccAddress">
+                    </div>
+                    <div class="six columns">
+                        <label for="theSubject">Subject</label>
+                        <input class="u-full-width" name="theSubject">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="u-full-width" for="theBody">Body</label>
+                    <textarea class="u-full-width" name="theBody"></textarea>
+                </div>
+                <div class="row">
+                    <input type="button" value="Create" name="button" class="button-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
