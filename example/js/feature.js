@@ -3,7 +3,7 @@ $(document).ready(function () {
 });
 
 var setupTimout = function () {
-    window.setTimeout(switchFeatureImage, 10000);
+    window.setTimeout(switchFeatureImage, 6000);
 }
 
 var switchFeatureImage = function () {
