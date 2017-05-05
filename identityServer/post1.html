@@ -1,0 +1,124 @@
+<html>
+<header>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <link rel="stylesheet" type="text/css" href="content/main.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+</header>
+
+<body>
+    <h1>IdentityServer with Active Directory or other SSO auth</h1>
+    <p><a href="http://docs.identityserver.io/en/release/">IdentityServer</a> is well known as a way to easily accomplish single
+        sign on and openauth more simply. However, what if I just want to use IdentityServer for its single sign on/authentication
+        management pieces while ignoring openauth? This isn't as simple as it seems because of the implementation details
+        and lack of documentation surrounding this implementation strategy. Below are the steps I've gathered to make this
+        possible in a Xamarin Forms application.</p>
+    <h3>API endpoint Configuration</h3>
+    <p>First you will need to establish an API endpoint for your Xamarin Forms app to authenticate against. This can be done
+        mostly by following your typical IdentityServer install and setup. The only difference in our particular scenario
+        is that we are adding an implementation of an IResourceOwnerPasswordValidator to intercept login requests before
+        they're redirected to a 3rd party login page. We will call the class ResourceOwnerPasswordValidator.</p>
+    <p>To hook this class up to be called when accessing the /connect/token endpoint for IdentityServer, you need to go into
+        your setup of IdentityServer, find the builder, set .AddTransient
+        <IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>(). Here's an example:</p>
+    <pre>
+public void SetupService(IServiceCollection services)
+{
+    var builder = services.AddIdentityServerBuilder()
+        .AddInMemoryClients(GetClients())
+        .AddInMemoryApiResources(GetApiResources())
+        .AddTemporarySigningCredential()
+        .AddInMemoryPersistedGrants()
+        .AddProfileService<DeltaVProfileService>();
+
+    builder.Services.AddAuthorization()
+        .AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>()
+        .AddIdentityServer();
+}
+</pre>
+    <p>Next we will move onto the implementation of IResourceOwnerPasswordValidator. You should be setting a GrantValidationResults
+        on the context.Result to return success/failure to the caller. Here is an example from a project I worked on that
+        authenticates against active directory instead of using 3rd party auth.</p>
+    <pre>using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Data.Library.DB;
+using Data.UserDevices.Queries;
+using Data.Users.Queries;
+using IdentityModel;
+using IdentityServer4.Models;
+using IdentityServer4.Validation;
+using MediatR;
+
+public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
+{
+    public ResourceOwnerPasswordValidator(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+    {
+        var userResponse = await _mediator.SendAsync(new GetUserByUsername.Query { Username = context.UserName });
+        var validationResult = await ValidateUser(context, userResponse, context.UserName);
+
+        context.Result = validationResult;
+    }
+
+    private async Task&lt;GrantValidationResult&gt; ValidateUser(ResourceOwnerPasswordValidationContext context,
+        GetUserByUsername.Response userResponse, string username)
+    {
+        GrantValidationResult validationResult = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid Grant.");
+
+        if (await IsValidUser(userResponse, username, context.Password))
+        {
+            if (await CheckActiveDirectory(username, password))
+            {
+                validationResult = ValidGrantValidationResult(userResponse.User);
+            }
+            else
+            {
+                validationResult = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid Grant.");
+            }
+        }
+
+        return validationResult;
+    }
+
+    private GrantValidationResult ValidGrantValidationResult(User user)
+    {
+        GrantValidationResult validationResult;
+        var claims = GetUsersClaims(user);
+        validationResult = new GrantValidationResult(subject: user.UserName, authenticationMethod: "custom",
+            claims: claims);
+        return validationResult;
+    }
+
+    private async Task&lt;bool&gt; CheckActiveDirectory(string username, string password)
+    {
+        var response = await _mediator.SendAsync(new AdHandler.Query { Username = username, Password = password });
+        return response.UserIsValid;
+    }
+
+    private List&lt;Claim&gt; GetUsersClaims(User user)
+    {
+        var claims = new List&lt;Claim&gt;();
+
+        claims.Add(new Claim(JwtClaimTypes.Id, user.Id.ToString()));
+        claims.Add(new Claim(JwtClaimTypes.PreferredUserName, user.UserName));
+        claims.Add(new Claim(JwtClaimTypes.Email, user.Email));
+        claims.Add(new Claim(JwtClaimTypes.Name, user.FullName));
+
+        return claims;
+    }
+
+    private readonly IMediator _mediator;
+}
+</pre>
+    <p>At this point you might be asking yourself: Why bother using IdentityServer at all? The biggest advantages to me are
+        you still have the rest of IdentityServers functionality like normal. The main ones I was going after we're claims
+        support and identifying multiple scopes. In my next post I'll be talking about how you can get Xamarin Froms to authenticate
+        against the setup we just created.</p>
+</body>
+
+</html>
