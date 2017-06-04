@@ -1,0 +1,57 @@
+<html>
+<header>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <link rel="stylesheet" type="text/css" href="content/main.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+</header>
+
+<body>
+    <h1>Hitting our custom IdentityServer endpoint from your SPA</h1>
+    <p>In this post I will discuss how to make your Xamarin app authenticate against our IdentityServer. Whether you&quot;re
+        using a typical IdentityServer install or the custom one discussed in another post, the setup should be similar The
+        advantage of using IdentityServer for auth is that you retain all the benefits of provided by it like JWT generation,
+        scopes, etc.</p>
+    <p>First you will need to pull a nuget package into your shared project called IdentityModel. I had a problem installing
+        it directly into my PCL project due to profile mismatches so I actually downloaded it into my iOS project then referenced
+        that in my PCL project.</p>
+    <div><img src="IdentityModel.png" /></div>
+    <p>Now you will want to hit the IdentityServer discovery endpoint. This call will tell you where the auth endpoint and other
+        endpoints are. I used the following code to do this:</p>
+    <pre>
+        var disco = await DiscoveryClient.GetAsync(ApiBaseUrl);
+    </pre>
+    <p>Then you can actually hit the endpoint for to authenticate. THIS </p>
+    <pre>
+        if (!string.IsNullOrWhiteSpace(disco?.TokenEndpoint))
+        {
+            var tokenClient = new TokenClient(disco.TokenEndpoint, "ClientId", "SecretFromConfig");
+            var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(
+                authRequestModel.Username,
+                authRequestModel.Password,
+                "Api",
+                new
+                {
+                    PhoneIdentifier = authRequestModel.PhoneIdentifier,
+                    PhoneIdentifierType = authRequestModel.PhoneIdentifierType
+                });
+
+            if (!tokenResponse.IsError)
+            {
+                // YAY SUCCESS, do successful stuff
+            }
+            else 
+            {
+                // handle errors
+            } 
+        }
+    </pre>
+    <p>As you can see, the first thing I do is make sure the authentcation endoint came back correctly. Then we move onto bulding
+        the client. The first arguement is the url for authentication endpoint; pretty self explinatory. The next two arguments
+        are based on your IdentityServer4 configuration. It should be the state which client you are and the secret associated
+        with that client.</p>
+    <p>Once you setup the client its time to get r done. When sending your request to RequestResourceOwnerPasswordAsync for
+        the first two arguements you will put the username and password of the user. Next comes the scope you&quot;re requesting
+        access to, in this case the Api. Last, and optionally, you pass any additional parameters that you will need in your
+        custom authentication method. That's pretty much it. You can do what you would like after the success authentication!</p>
+
+</html>
