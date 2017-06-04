@@ -7,51 +7,82 @@
 
 <body>
     <h1>Hitting our custom IdentityServer endpoint from your SPA</h1>
-    <p>In this post I will discuss how to make your Xamarin app authenticate against our IdentityServer. Whether you&quot;re
-        using a typical IdentityServer install or the custom one discussed in another post, the setup should be similar The
-        advantage of using IdentityServer for auth is that you retain all the benefits of provided by it like JWT generation,
-        scopes, etc.</p>
-    <p>First you will need to pull a nuget package into your shared project called IdentityModel. I had a problem installing
-        it directly into my PCL project due to profile mismatches so I actually downloaded it into my iOS project then referenced
-        that in my PCL project.</p>
-    <div><img src="IdentityModel.png" /></div>
-    <p>Now you will want to hit the IdentityServer discovery endpoint. This call will tell you where the auth endpoint and other
-        endpoints are. I used the following code to do this:</p>
+    <p>
+        The last part of this series will cover how to hit your IdentityServer endpoint from a SPA (in my case, Angular4). 
+        The main functions you will need to implement are login, a method to store user credentials,
+        a way to check for expired tokens, and a method for refreshing the login.
+    </p>
+    <p>
+        First I'll include the the login method I used:
+    </p>
     <pre>
-        var disco = await DiscoveryClient.GetAsync(ApiBaseUrl);
+    login(username: string, password: string): Observable&lt;boolean&gt; {
+        var header = new Headers();
+        header.append("Authorization", "Basic " + btoa("WebApp:webapp_secret"));
+        header.append("Content-Type", "application/x-www-form-urlencoded");
+
+        var postParams = "grant_type=password"
+            + "&nbsp;username=" + encodeURIComponent(username)
+            + "&nbsp;password=" + encodeURIComponent(password)
+            + "&nbsp;scope=" + encodeURIComponent("Api offline_access");
+
+        return this.http.post('/connect/token', postParams, { headers: header })
+            .map((response: Response) => {
+                try {
+                    let jsonResponse = JSON.parse(response.text());
+
+                    // login successful if there's a jwt token in the response
+                    if (jsonResponse.access_token) {
+                        this.storeUserAuthData(username, jsonResponse);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (error) {
+                    console.log(error);
+                    return false;
+                }
+            });
+    }
     </pre>
-    <p>Then you can actually hit the endpoint for to authenticate. THIS </p>
+    <p>
+        The only downside of this function is that it doesn't use the discovery endpoint provided by IdentityServer
+        to find the connect endpoint. If this is a big deal for you, you might want to add that functionality. Other than
+        that it should pretty much be copy paste. Once this login is complete you'll want to store the user credentials 
+        and token expiration for use inside your app. This is performed by this.storeUserAuthData(username, jsonResponse) 
+        in the above function. You will also need a function to refresh the login.
+    </p>
     <pre>
-        if (!string.IsNullOrWhiteSpace(disco?.TokenEndpoint))
-        {
-            var tokenClient = new TokenClient(disco.TokenEndpoint, "ClientId", "SecretFromConfig");
-            var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(
-                authRequestModel.Username,
-                authRequestModel.Password,
-                "Api",
-                new
-                {
-                    PhoneIdentifier = authRequestModel.PhoneIdentifier,
-                    PhoneIdentifierType = authRequestModel.PhoneIdentifierType
-                });
+    refreshLogin(username: string, refreshToken: string) {
+        var header = new Headers();
+        header.append("Authorization", "Basic " + btoa("WebApp:webapp_secret"));
+        header.append("Content-Type", "application/x-www-form-urlencoded");
 
-            if (!tokenResponse.IsError)
-            {
-                // YAY SUCCESS, do successful stuff
-            }
-            else 
-            {
-                // handle errors
-            } 
-        }
+        var postParams = "grant_type=refresh_token"
+            + "&nbps;refresh_token=" + encodeURIComponent(refreshToken)
+            + "&nbsp;scope=Api";
+
+        return this.http.post('/connect/token', postParams, { headers: header })
+            .map((response: Response) => {
+                try {
+                    let jsonResponse = JSON.parse(response.text());
+
+                    // refresh successful if there's a jwt token in the response
+                    if (jsonResponse.access_token) {
+                        this.storeUserAuthData(username, jsonResponse);
+                        return jsonResponse.access_token;
+                    } else {
+                        return null;
+                    }
+                } catch (error) {
+                    console.log(error);
+                    return null;
+                }
+            });
+    }
     </pre>
-    <p>As you can see, the first thing I do is make sure the authentcation endoint came back correctly. Then we move onto bulding
-        the client. The first arguement is the url for authentication endpoint; pretty self explinatory. The next two arguments
-        are based on your IdentityServer4 configuration. It should be the state which client you are and the secret associated
-        with that client.</p>
-    <p>Once you setup the client its time to get r done. When sending your request to RequestResourceOwnerPasswordAsync for
-        the first two arguements you will put the username and password of the user. Next comes the scope you&quot;re requesting
-        access to, in this case the Api. Last, and optionally, you pass any additional parameters that you will need in your
-        custom authentication method. That's pretty much it. You can do what you would like after the success authentication!</p>
-
+    <p>
+        This is very similar to the login method but you're sneind the refresh token to the server instead of the password.
+        Using these methods you can build your own way to track token expiration and refresh the user's credentials.
+    </p>
 </html>
