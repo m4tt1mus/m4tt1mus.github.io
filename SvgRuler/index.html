@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SVG Ruler</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="keywords"
+      content=" SVG, SVG ruler, Vector Ruler, Javascript SVG Ruler"
+    />
+    <meta name="author" content="Matt Seigel" />
+    <script type="text/javascript" src="bundle.js"></script>
+  </head>
+  <body>
+    <div class="bootstrap-padded page-wrapper">
+      <h1>SVG Ruler Builder</h1>
+      <div id="rulerSettings">
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0">Units</legend>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="units"
+                  id="imperial"
+                  value="imperial"
+                  checked
+                />
+                <label class="form-check-label" for="imperial">
+                  Imperial (ft)
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="units"
+                  id="metric"
+                  value="metric"
+                />
+                <label class="form-check-label" for="metric">
+                  Metric (m)
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-group row">
+          <label for="rulerLength" class="col-sm-2 col-form-label"
+            >Ruler Length</label
+          >
+          <div class="col-sm-4">
+            <input type="text" class="form-control" id="rulerLength" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="rulerWidth" class="col-sm-2 col-form-label"
+            >Ruler Width (in)</label
+          >
+          <div class="col-sm-4">
+            <input
+              type="text"
+              class="form-control"
+              id="rulerWidth"
+              value="5.25"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="dpi" class="col-sm-2 col-form-label">DPI</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" id="dpi" value="72" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="filename" class="col-sm-2 col-form-label">Filename</label>
+          <div class="col-sm-4">
+            <input
+              type="text"
+              class="form-control"
+              id="filename"
+              value="exportedRuler"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-4">
+          <button id="svgExpBtn" type="button" class="btn btn-primary">
+            Download ruler as .SVG
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div id="canvasWrapper">
+            <canvas resize id="rulerCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
