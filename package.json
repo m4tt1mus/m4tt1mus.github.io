@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "postcss styles/combined.scss -o styles/combined.css",
+    "watch": "postcss --watch styles/combined.scss -o styles/combined.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "tailwindcss": "^2.2.19",
+    "postcss-cli": "^9.0.2"
+  }
+}
