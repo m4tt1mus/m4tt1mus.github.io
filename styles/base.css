@@ -1,4 +1,8 @@
 body {
     margin: 0;
     background-color: #001220;
+    background-image: url('/img/top-splash.svg');
+    background-position: top;
+    background-repeat: no-repeat;
+    color: #FFFFFF;
 }
