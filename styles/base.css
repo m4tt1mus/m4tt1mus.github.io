@@ -1,13 +1,55 @@
+:root {
+    --powder-blue: #B3E5E4;
+    --viridian-green: #349896;
+    --maximum-blue: #62B6CB;
+    --carolina-blue: #5FA8D3;
+    --indigo-blue: #1B4965;
+    --rich-black: #001220;
+    --cinnabar: #DC493A;
+}
+
+.powder-blue {
+    color: var(--powder-blue);
+}
+
+.viridian-green {
+    color: var(--viridian-green);
+}
+
+.maximum-blue {
+    color: var(--maximum-blue);
+}
+
+.carolina-blue {
+    color: var(--carolina-blue);
+}
+
+.indigo-blue {
+    color: var(--indigo-blue);
+}
+
+.rich-black {
+    color: var(--rich-black);
+}
+
+.cinnabar {
+    color: var(--cinnabar);
+}
+
 body {
     margin: 0;
-    background-color: #001220;
+    background-color: var(--rich-black);
     background-image: url('/img/top-splash.svg');
     background-position: top;
     background-repeat: no-repeat;
-    color: #FFFFFF;
+    color: white;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 section.top {
     font-family: 'Ubuntu', sans-serif;
 }
+
+
+
+
