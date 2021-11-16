@@ -1,39 +1,69 @@
 :root {
-    --powder-blue: #B3E5E4;
-    --viridian-green: #349896;
-    --maximum-blue: #62B6CB;
-    --carolina-blue: #5FA8D3;
-    --indigo-blue: #1B4965;
-    --rich-black: #001220;
-    --cinnabar: #DC493A;
+    --powder-blue: #b3e5e4ff;
+    --viridian-green: #349896ff;
+    --maximum-blue: #62b6cbff;
+    --carolina-blue: #5fa8d3ff;
+    --indigo-dye: #1b4965ff;
+    --rich-black: #001220ff;
+    --cinnabar: #dc493aff;
+    --melon: #F0AFA8;
 }
 
 .powder-blue {
     color: var(--powder-blue);
 }
+.powder-blue-border {
+    border-color: var(--powder-blue);
+}
 
 .viridian-green {
     color: var(--viridian-green);
+}
+.viridian-green-border {
+    border-color: var(--viridian-green);
 }
 
 .maximum-blue {
     color: var(--maximum-blue);
 }
+.maximum-blue-border {
+    border-color: var(--maximum-blue);
+}
 
 .carolina-blue {
     color: var(--carolina-blue);
 }
+.carolina-blue-border {
+    border-color: var(--carolina-blue);
+}
 
-.indigo-blue {
-    color: var(--indigo-blue);
+
+.indigo-dye {
+    color: var(--indigo-dye);
+}
+.indigo-dye-border {
+    border-color: var(--indigo-dye);
 }
 
 .rich-black {
     color: var(--rich-black);
 }
+.rich-black-border {
+    border-color: var(--rich-black);
+}
 
 .cinnabar {
     color: var(--cinnabar);
+}
+.cinnabar-border {
+    border-color: var(--cinnabar);
+}
+
+.melon {
+    color: var(--melon);
+}
+.melon-border {
+    border-color: var(--melon);
 }
 
 body {
@@ -43,11 +73,18 @@ body {
     background-position: top;
     background-repeat: no-repeat;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Ubuntu', Arial, Helvetica, sans-serif;
 }
 
-section.top {
-    font-family: 'Ubuntu', sans-serif;
+body a, body a:visited {
+    color: var(--cinnabar);
+}
+body a:hover {
+    color: var(--melon);
+}
+
+.text-small-caps {
+    font-variant: small-caps;
 }
 
 
