@@ -13,127 +13,56 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/combined.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js" defer></script>
+    <script src="/features/homeApp/app.js" defer></script>
 </head>
 
 <body class="pb-32">
-    <section class="top grid grid-cols-5 gap-20 mt-32">
-        <div class=""></div>
-        <div class="rounded-xl justify-self-end">
-            <img class="carolina-blue-border border-dashed border-2 rounded-xl h-64"
-                src="/img/Matt Seigel-square-small.png" alt="Portrait of Matt Seigel" />
-        </div>
-        <div class="col-span-2 text-center">
-            <div class=" text-8xl">
-                Matt Seigel
+    <div id="app">
+        <section class="top grid grid-cols-5 gap-20 mt-32">
+            <div class=""></div>
+            <div class="rounded-xl justify-self-end">
+                <img class="carolina-blue-border border-dashed border-2 rounded-xl h-64"
+                    src="/img/Matt Seigel-square-small.png" alt="Portrait of Matt Seigel" />
             </div>
-            <div class="pt-4 text-4xl">
-                TL, Principal Software Engineer
+            <div class="col-span-2 text-center">
+                <div class=" text-8xl">
+                    Matt Seigel
+                </div>
+                <div class="pt-4 text-4xl">
+                    TL, Principal Software Engineer
+                </div>
+                <div class="pt-8 text-2xl">
+                    <a href="http://www.linkedin.com/in/m4tt1mus/">LinkedIn</a>
+                    |
+                    <a href="https://stackoverflow.com/users/464251/m4tt1mus">StackOverflow</a>
+                    |
+                    <a href="https://github.com/m4tt1mus">GitHub</a>
+                    |
+                    <a href="https://gist.github.com/m4tt1mus">Gists</a>
+                </div>
             </div>
-            <div class="pt-8 text-2xl">
-                <a href="http://www.linkedin.com/in/m4tt1mus/">LinkedIn</a>
-                |
-                <a href="https://stackoverflow.com/users/464251/m4tt1mus">StackOverflow</a>
-                |
-                <a href="https://github.com/m4tt1mus">GitHub</a>
-                |
-                <a href="https://gist.github.com/m4tt1mus">Gists</a>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="mt-32 matts-things">
-        <div class="text-center text-small-caps viridian-green text-6xl">
-            Internet of Matt's Things
-        </div>
-        <div class="text-black grid grid-cols-3 w-3/4 m-auto">
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a
-                        href="http://headspring.com/2020/12/22/behold-blazormirror-a-guide-to-building-a-magic-mirror-with-blazor-and-raspberrypi/">Behold,
-                        BlazorMirror!</a>
-                </div>
-                <div class="mt-4">Your Raspberry Pi Blazor Magic Mirror build guide.</div>
-                <div class="mt-4 text-center text-small-caps"><a
-                        href="http://headspring.com/2020/12/22/behold-blazormirror-a-guide-to-building-a-magic-mirror-with-blazor-and-raspberrypi/">Read</a>
-                </div>
+        <section class="mt-32 matts-things">
+            <div class="text-center text-small-caps viridian-green text-6xl">
+                Internet of Matt's Things
             </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a
-                        href="http://headspring.com/2020/09/14/crash-prevention-successful-updates-with-electron-and-electron-forge/">Successful
-                        updates with Electron Forge</a>
-                </div>
-                <div class="mt-4">Electron is awesome, but Electron updating needs to be configured to work well. In
-                    this Electron tutorial, we show you how to configure updating and warning the user not to shut down
-                    an application when it’s updating—proactively eliminating problems and saving time.</div>
-                <div class="mt-4 text-center text-small-caps"><a
-                        href="http://headspring.com/2020/09/14/crash-prevention-successful-updates-with-electron-and-electron-forge/">Read</a>
+            <div class="text-black grid grid-cols-3 w-3/4 m-auto">
+                <div v-for="thing in mattsThings" :key="thing.title" v:on-click="goToUrl()"
+                    class="mx-4 mt-8 p-8 bg-white rounded-xl">
+                    <div class="text-center text-small-caps text-2xl">
+                        <div>
+                            {{ thing.title }}
+                        </div>
+                    </div>
+                    <div class="mt-4">{{ thing.description }}</div>
                 </div>
             </div>
 
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a
-                        href="http://headspring.com/2020/09/24/building-signing-and-publishing-electron-forge-applications-for-windows/">Building,
-                        signing, and
-                        publishing Electron Forge applications for Windows</a>
-                </div>
-                <div class="mt-4">We dig into the different types of code signing certificates, coding the updater,
-                    configuring your package.json, and how to initiate a build/deployment when using Electron with
-                    Electron Forge.</div>
-            </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a href="/features/jsPres/JavascriptTheBasicsAndConfustionPresentation.html">JavaScript: The Basics
-                        and Confusion</a>
-                </div>
-                <div class="mt-4">A presentation covering a lot of the strange parts of JavaScript. Great for
-                    intermediate
-                    JavasScript devs.</div>
-            </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a href="/features/identityServer/post1.html">Part 1: IdentityServer with Active Directory
-                        or other SSO auth</a>
-                </div>
-                <div class="mt-4">This talks about overriding IdentityServer to use AD as the source of account
-                    validation.</div>
-            </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-                    <a href="/features/identityServer/post2.html">Part 2: Hitting our custom IdentityServer endpoint
-                        from
-                        Xamarin Forms</a>
-                </div>
-                <div class="mt-4">Here we discuss how to authenticate against our previous created IdentityServer
-                    endpoint from a
-                    Xamarin Forms mobile app.</div>
-            </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl">
-
-                    <a href="/features/identityServer/post3.html">Part 3: Hitting our custom IdentityServer endpoint
-                        from your
-                        SPA</a>
-                </div>
-                <div class="mt-4">Similar to the last article but this time we're hitting out previous created
-                    IdentityServer from a Single Page Application.</div>
-            </div>
-
-            <div class="mx-4 mt-8 p-8 bg-white rounded-xl">
-                <div class="text-center text-small-caps text-2xl"><a
-                        href="/features/svgRuler/index.html">SVG Ruler</a></div>
-                <div class="mt-4">This creates a rule in a HTML Canvas based on input you fill out.</div>
-            </div>
-            
-        </div>
-    </section>
-
+        </section>
+    </div>
 </body>
 
 </html>
