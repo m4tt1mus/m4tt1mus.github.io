@@ -83,13 +83,6 @@ body a:hover {
     color: var(--melon);
 }
 
-.matts-things a, .matts-things a:visited {
-    color: var(--carolina-blue);
-}
-.matts-things a:hover {
-    color: var(--maximum-blue);
-}
-
 .text-small-caps {
     font-variant: small-caps;
 }
