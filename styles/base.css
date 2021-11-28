@@ -88,7 +88,13 @@ body a:hover {
 }
 
 
+.matts-things .tile {
+    opacity: .9;
+}
 
+.matts-things .tile:hover {
+    opacity: 1;
+}
 
 /* @media (min-width: 1536px) {
 
