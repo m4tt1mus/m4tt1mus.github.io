@@ -50,7 +50,7 @@
                 Internet of Matt's Things
             </div>
             <div class="text-black grid grid-cols-3 w-3/4 m-auto">
-                <div v-for="thing in mattsThings" :key="thing.title" v:on-click="goToUrl()"
+                <div v-for="thing in mattsThings" :key="thing.title" v-on:click="goToUrl(thing)"
                     class="tile mx-4 mt-8 p-8 bg-white rounded-xl cursor-pointer">
                     <div class="text-center text-small-caps text-2xl">
                         <div class="viridian-green">

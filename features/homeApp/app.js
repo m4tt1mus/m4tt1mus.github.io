@@ -47,8 +47,8 @@ var tiles = new Vue({
     ],
   },
   methods: {
-    reverseMessage: function () {
-      this.message = this.message.split("").reverse().join("");
+    goToUrl: function (thing) {
+      window.location = thing.url;
     },
   },
 });
